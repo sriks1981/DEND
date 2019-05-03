@@ -4,8 +4,16 @@ from sql_queries import create_table_queries, drop_table_queries
 
 def create_database():
     """
-        Procedure to connect to database and return the connection details.
+        Procedure to connect to Postgres database and return the connection details.
+
+        Input:
+            None
+        
+        Return:
+            cur - Reference to the open cursor for executing queries
+            conn - Reference to the open connection to Postgres database
     """
+
     # connect to default database
     conn = psycopg2.connect("host=127.0.0.1 dbname=studentdb user=student password=student")
     conn.set_session(autocommit=True)
@@ -28,6 +36,12 @@ def create_database():
 def drop_tables(cur, conn):
     """
         Procedure to drop the tables configured
+
+        Input:
+            None
+        
+        Return:
+            None
     """
     for query in drop_table_queries:
         cur.execute(query)
@@ -37,6 +51,12 @@ def drop_tables(cur, conn):
 def create_tables(cur, conn):
     """
         Procedure to create the tables configured
+
+        Input:
+            None
+        
+        Return:
+            None
     """
     for query in create_table_queries:
         cur.execute(query)

@@ -9,6 +9,13 @@ from sql_queries import *
 def process_song_file(cur, filepath):
     """
         Procedure to process the song file and load the records into the database.
+        
+        Input params:
+            cur - This is reference to an open cursor for executing queries
+            filepath - The relative path of the song file to be processed
+        
+        Returns:
+            None
     """
 
     # open song file
@@ -36,6 +43,13 @@ def process_song_file(cur, filepath):
 def process_log_file(cur, filepath):
     """
         Procedure to process the log file and load the records into the database
+
+        Input params:
+            cur - This is reference to an open cursor for executing queries
+            filepath - The relative path of the log file to be processed
+
+        Returns:
+            None
     """
     # open log file
     df = pd.read_json(filepath, lines=True)
@@ -50,7 +64,7 @@ def process_log_file(cur, filepath):
     time_data = (t, t.dt.hour, t.dt.day, t.dt.week, t.dt.month, t.dt.year, t.dt.weekday)
     column_labels = ('ts','hr','dy','wk','mn','yr','wd')
     val = dict(zip(column_labels,time_data))
-    time_df = pd.DataFrame(val)
+    time_df = pd.DataFrame(val).drop_duplicates()
 
     try:
         for i, row in time_df.iterrows():
@@ -83,19 +97,28 @@ def process_log_file(cur, filepath):
         else:
             songid, artistid = None, None
 
-    try:
-        # insert songplay record
-        songplay_data = ( pd.to_datetime(row['ts']),row['userId'],row['level'], songid, artistid, row['sessionId'],row['location'],row['userAgent'])
-        cur.execute(songplay_table_insert, songplay_data)
-    except Exception as e:
-        print("Error while inserting into time table - " )
-        print(e)
-        sys.exit(0)
+        try:
+            # insert songplay record
+            songplay_data = ( pd.to_datetime(row['ts']),row['userId'],row['level'], songid, artistid, row['sessionId'],row['location'],row['userAgent'])
+            cur.execute(songplay_table_insert, songplay_data)
+        except Exception as e:
+            print("Error while inserting into time table - " )
+            print(e)
+            sys.exit(0)
 
 # Wrapper procedure to process song/log data into the database based on the parameter value.
 def process_data(cur, conn, filepath, func):
     """
         Wrapper procedure to process song/log data into the database based on the parameter value.
+
+        Input params:
+            cur - This is reference to an open cursor for executing queries
+            conn - This is a reference to the open Postgres database connection.
+            filepath - The relative path of the song/log file to be processed
+            func - The function name to process all the log/song files.
+        
+        Returns:
+            None
     """
     # get all files matching extension from directory
     all_files = []
