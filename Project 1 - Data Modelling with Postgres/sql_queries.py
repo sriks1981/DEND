@@ -35,7 +35,7 @@ song_table_insert = ("""insert into songs (song_id, title, artist_id, year, dura
 artist_table_insert = ("""insert into artists(artist_id, name, location, latitude, longitude) values (%s,%s,%s,%s,%s) ON CONFLICT(ARTIST_ID) DO NOTHING
 """)
 
-time_table_insert = ("""insert into time (start_time , hour , day , week , month , year , weekday ) values(%s,%s,%s,%s,%s,%s,%s) ON CONFLICT(START_TIME) DO NOTHING
+time_table_insert = ("""insert into time (start_time , hour , day , week , month , year , weekday ) values(%s,%s,%s,%s,%s,%s,%s)
 """)
 
 # FIND SONGS
