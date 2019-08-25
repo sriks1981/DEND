@@ -20,21 +20,86 @@ drop_time_dim = "drop table if exists time"
 
 
 # Create Stage Table
-create_song_data_table = "create table stage_song_data(artist_id varchar(128), artist_latitude DOUBLE PRECISION, artist_location varchar(512), \
-	artist_longitude DOUBLE PRECISION, artist_name varchar(256), duration DOUBLE PRECISION, num_songs integer, song_id varchar(256), title varchar(512), year integer)"
-create_log_data_table = "create table stage_log_data (artist varchar(128), auth varchar(128), firstName varchar(32), gender char(1), \
-	itemInSession integer, lastName varchar(256), length DOUBLE PRECISION, level varchar(128), location varchar(512), method varchar(128), page varchar(128),\
-	registration DOUBLE PRECISION, sessionId integer, song varchar(256), status integer, ts BIGINT, userAgent varchar(512), userId varchar(24))"
+create_song_data_table = "create table stage_song_data\
+							(artist_id varchar(128), \
+							artist_latitude DOUBLE PRECISION,\
+							artist_location varchar(512), \
+							artist_longitude DOUBLE PRECISION,\
+							artist_name varchar(256),\
+							duration DOUBLE PRECISION,\
+							num_songs integer, \
+							song_id varchar(256), \
+							title varchar(512), \
+							year integer\
+							)"
+create_log_data_table = "create table stage_log_data \
+							(artist varchar(128), \
+							auth varchar(128), \
+							firstName varchar(32), \
+							gender char(1), \
+							itemInSession integer, \
+							lastName varchar(256), \
+							length DOUBLE PRECISION, \
+							level varchar(128), \
+							location varchar(512), \
+							method varchar(128), \
+							page varchar(128),\
+							registration DOUBLE PRECISION, \
+							sessionId integer, \
+							song varchar(256), \
+							status integer, \
+							ts BIGINT, \
+							userAgent varchar(512), \
+							userId varchar(24)\
+							)"
 
 # Create Fact and Dimension Tables
-create_songplays_fact_table = "create table songplays (songplay_id integer IDENTITY(0,1), start_time timestamp sortkey,user_id varchar(16), level varchar(128), \
-song_id varchar(256) distkey, artist_id varchar(128), session_id integer, location varchar(512), user_agent varchar(512), primary key(songplay_id))"
-create_users_dim_table = "create table users (user_id varchar(16), first_name varchar(256), last_name varchar(256), gender char(1),  \
-level varchar(128), primary key(user_id))"
-create_songs_dim_table = "create table songs(song_id varchar(256), title varchar(512), artist_id varchar(128), year integer, duration DOUBLE PRECISION, primary key(song_id))"
-create_artists_dim_table="create table artists (artist_id varchar(128), name varchar(256), location varchar(512), lattitude DOUBLE PRECISION, \
-longitude DOUBLE PRECISION, primary key(artist_id))"
-create_time_dim_table = "create table time (start_time timestamp, hour integer, day integer, week integer, month integer, year integer, weekday integer, primary key (start_time))"
+create_songplays_fact_table = "create table songplays \
+								(songplay_id integer IDENTITY(0,1), \
+								start_time timestamp sortkey,\
+								user_id varchar(16), \
+								level varchar(128), \
+								song_id varchar(256) distkey, \
+								artist_id varchar(128), \
+								session_id integer, \
+								location varchar(512), \
+								user_agent varchar(512), \
+								primary key(songplay_id)\
+								)"
+create_users_dim_table = "create table users \
+							(user_id varchar(16), \
+							first_name varchar(256), \
+							last_name varchar(256), \
+							gender char(1),  \
+							level varchar(128), \
+							primary key(user_id)\
+							) diststyle all"
+create_songs_dim_table = "create table songs\
+							(song_id varchar(256) distkey, \
+							title varchar(512), \
+							artist_id varchar(128), \
+							year integer sortkey, \
+							duration DOUBLE PRECISION, \
+							primary key(song_id)\
+							)"
+create_artists_dim_table="create table artists \
+							(artist_id varchar(128), \
+							name varchar(256), \
+							location varchar(512), \
+							lattitude DOUBLE PRECISION, \
+							longitude DOUBLE PRECISION, \
+							primary key(artist_id)\
+							)diststyle all"
+create_time_dim_table = "create table time \
+							(start_time timestamp, \
+							hour integer, \
+							day integer, \
+							week integer, \
+							month integer, \
+							year integer, \
+							weekday integer, \
+							primary key (start_time)\
+							) diststyle all"
 
 # COPY commands
 copy_stage_song_data = ("""COPY stage_song_data FROM {} iam_role {} format as json 'auto'""").format(SONG_DATA,ARN)
