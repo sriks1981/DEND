@@ -18,7 +18,6 @@ drop_songs_dim = "drop table if exists songs"
 drop_artists_dim = "drop table if exists artists"
 drop_time_dim = "drop table if exists time"
 
-
 # Create Stage Table
 create_song_data_table = "create table stage_song_data\
 							(artist_id varchar(128), \
@@ -56,11 +55,11 @@ create_log_data_table = "create table stage_log_data \
 # Create Fact and Dimension Tables
 create_songplays_fact_table = "create table songplays \
 								(songplay_id integer IDENTITY(0,1), \
-								start_time timestamp sortkey,\
-								user_id varchar(16), \
+								start_time timestamp sortkey not null,\
+								user_id varchar(16) not null, \
 								level varchar(128), \
-								song_id varchar(256) distkey, \
-								artist_id varchar(128), \
+								song_id varchar(256) distkey not null, \
+								artist_id varchar(128) not null, \
 								session_id integer, \
 								location varchar(512), \
 								user_agent varchar(512), \
@@ -77,7 +76,7 @@ create_users_dim_table = "create table users \
 create_songs_dim_table = "create table songs\
 							(song_id varchar(256) distkey, \
 							title varchar(512), \
-							artist_id varchar(128), \
+							artist_id varchar(128) not null, \
 							year integer sortkey, \
 							duration DOUBLE PRECISION, \
 							primary key(song_id)\
